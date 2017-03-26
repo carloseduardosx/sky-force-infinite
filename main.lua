@@ -39,7 +39,7 @@ local sheetOptions = {
         },
     },
 }
-local objectSheet = graphics.newImageSheet( "gameObjects.png", sheetOptions )
+local objectSheet = graphics.newImageSheet( "assets/gameObjects.png", sheetOptions )
 local lives = 3
 local score = 0
 local died = false
@@ -55,7 +55,7 @@ local backGroup = display.newGroup();
 local mainGroup = display.newGroup();
 local uiGroup = display.newGroup();
 
-local background = display.newImageRect( backGroup, "background.png", 800, 1400 )
+local background = display.newImageRect( backGroup, "assets/background.png", 800, 1400 )
 
 local function updateText()
     livesText.text = "Lives: " .. lives
