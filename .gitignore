@@ -2,3 +2,6 @@
 
 .idea/
 SkyForce-Infinite.iml
+
+# OSX
+.DS_Store
