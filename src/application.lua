@@ -25,22 +25,32 @@ Application.uiGroup = display.newGroup();
 
 Application.background = image.background( Application.backGroup )
 
-function Application.gameLoop()
-    asteroid.create( Application.mainGroup, Application.asteroidsTable, physics )
+function Application.initGame()
+    Application.laserLoopTimer = timer.performWithDelay(
+        300,
+        laser.fire( Application.mainGroup, Application.ship, physics ),
+        0
+    )
+    Application.gameLoopTimer = timer.performWithDelay(
+        500,
+        asteroid.generator(Application.mainGroup, Application.asteroidsTable, physics),
+        0
+    )
+    Runtime:addEventListener(
+        "collision",
+        event.onCollision( Application )
+    )
+    Application.ship:removeEventListener( "touch", Application.initGame )
+end
 
-    for i = #Application.asteroidsTable, 1, -1 do
-
-        local currentAsteroid = Application.asteroidsTable[i]
-
-        if ( currentAsteroid.x < -100 or
-                currentAsteroid.x > display.contentWidth + 100 or
-                currentAsteroid.y < - 100 or
-                currentAsteroid.y > display.contentHeight + 100 )
-        then
-            display.remove( currentAsteroid )
-            table.remove( Application.asteroidsTable, i )
-        end
-    end
+function Application.stopGame()
+    timer.cancel( Application.laserLoopTimer )
+    timer.cancel( Application.gameLoopTimer )
+    display.remove( Application.ship )
+    Runtime:removeEventListener(
+        "collision",
+        event.onCollision( Application )
+    )
 end
 
 function Application.start()
@@ -65,24 +75,9 @@ function Application.start()
 
     display.setStatusBar( display.HiddenStatusBar )
 
+    Application.ship:addEventListener( "touch", Application.initGame )
     Application.ship:addEventListener( "touch", shipAction.drag )
 
-    Application.laserLoopTimer = timer.performWithDelay(
-        300,
-        laser.fire( Application.mainGroup, Application.ship, physics ),
-        0
-    )
-
-    Application.gameLoopTimer = timer.performWithDelay(
-        500,
-        asteroid.generator(Application.mainGroup, Application.asteroidsTable, physics),
-        0
-    )
-
-    Runtime:addEventListener(
-        "collision",
-        event.onCollision( Application )
-    )
 end
 
 return Application

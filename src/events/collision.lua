@@ -33,9 +33,7 @@ function Event.onCollision( application )
                     application.livesText.text = "Lives: " .. application.lives
 
                     if ( application.lives == 0 ) then
-                        timer.cancel( application.laserLoopTimer )
-                        timer.cancel( application.gameLoopTimer )
-                        display.remove( application.ship )
+                        application.stopGame()
                     else
                         application.ship.alpha = 0
                         timer.pause( application.laserLoopTimer )
