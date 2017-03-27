@@ -30,4 +30,24 @@ function Asteroid.create( group, asteroidsTable, physics )
     newAsteroid:applyTorque( math.random( -6, 6 ) )
 end
 
+function Asteroid.generator( group, asteroidsTable, physics)
+    return function()
+        Asteroid.create( group, asteroidsTable, physics )
+
+        for i = #asteroidsTable, 1, -1 do
+
+            local currentAsteroid = asteroidsTable[i]
+
+            if ( currentAsteroid.x < -100 or
+                    currentAsteroid.x > display.contentWidth + 100 or
+                    currentAsteroid.y < - 100 or
+                    currentAsteroid.y > display.contentHeight + 100 )
+            then
+                display.remove( currentAsteroid )
+                table.remove( asteroidsTable, i )
+            end
+        end
+    end
+end
+
 return Asteroid

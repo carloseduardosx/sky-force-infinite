@@ -4,7 +4,7 @@ local image = require( "src.images.image" )
 local asteroid = require( "src.objects.asteroid" )
 local laser = require( "src.objects.laser" )
 local shipAction = require( "src.objects.ship" )
-local event = require( "src.event.event" )
+local event = require( "src.events.collision" )
 
 local Application = {}
 
@@ -69,7 +69,11 @@ function Application.start()
 
     timer.performWithDelay( 300, laser.fire( Application.mainGroup, Application.ship, physics ), 0 )
 
-    Application.gameLoopTimer = timer.performWithDelay( 500, Application.gameLoop, 0 )
+    Application.gameLoopTimer = timer.performWithDelay(
+        500,
+        asteroid.generator(Application.mainGroup, Application.asteroidsTable, physics),
+        0
+    )
 
     Runtime:addEventListener(
         "collision",
