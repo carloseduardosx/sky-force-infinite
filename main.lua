@@ -1,3 +1,3 @@
 local application = require( "src.application" )
 
-application.start()
+application.startGame()

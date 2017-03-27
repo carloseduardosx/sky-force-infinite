@@ -1,12 +1,12 @@
 local Ship = {}
 
-function Ship.drag( application )
+function Ship.drag( game )
     return function( event )
         local ship = event.target
         local phase = event.phase
 
         if ( "began" == phase ) then
-            application.speedUp()
+            game.speedUp()
             display.currentStage:setFocus( ship )
             ship.touchOffsetX = event.x - ship.x
             ship.touchOffsetY = event.y - ship.y
@@ -14,7 +14,7 @@ function Ship.drag( application )
             ship.x = event.x - ship.touchOffsetX
             ship.y = event.y - ship.touchOffsetY
         elseif ( "ended" == phase or "cancelled" == phase ) then
-            application.slowMotion()
+            game.slowMotion()
             display.currentStage:setFocus( nil )
         end
 
@@ -22,20 +22,18 @@ function Ship.drag( application )
     end
 end
 
-function Ship.restore( application )
+function Ship.restore( game )
     return function()
-        application.ship.isBodyActive = false
-        application.ship.x = display.contentCenterX
-        application.ship.y = display.contentHeight - 100
-
-        timer.resume( application.laserLoopTimer )
+        game.ship.isBodyActive = false
+        game.ship.x = display.contentCenterX
+        game.ship.y = display.contentHeight - 100
 
         transition.to(
-            application.ship,
+            game.ship,
             {
                 alpha=1,
                 time=4000,
-                onComplete = function() application.ship.isBodyActive = true application.died = false end
+                onComplete = function() game.ship.isBodyActive = true game.died = false end
             }
         )
     end

@@ -1,7 +1,7 @@
 local shipAction = require( "src.objects.ship" )
 local Event = {}
 
-function Event.onCollision( application )
+function Event.onCollision( game )
     return function( event )
         if ( event.phase == "began" ) then
 
@@ -14,30 +14,30 @@ function Event.onCollision( application )
                 display.remove( obj1 )
                 display.remove( obj2 )
 
-                for i = #application.asteroidsTable, 1, -1 do
-                    if ( application.asteroidsTable[i] == obj1 or application.asteroidsTable[i] == obj2 ) then
-                        table.remove( application.asteroidsTable, i )
+                for i = #game.asteroidsTable, 1, -1 do
+                    if ( game.asteroidsTable[i] == obj1 or game.asteroidsTable[i] == obj2 ) then
+                        table.remove( game.asteroidsTable, i )
                         break
                     end
                 end
 
-                application.score = application.score + 100
-                application.scoreText.text = "Score: " .. application.score
+                game.score = game.score + 100
+                game.scoreText.text = "Score: " .. game.score
             elseif ( ( obj1.myName == "ship" and obj2.myName == "asteroid" ) or
                     ( obj1.myName == "asteroid" and obj2.myName == "ship" ) )
             then
-                if ( application.died == false ) then
-                    application.died = true
+                if ( game.died == false ) then
+                    game.died = true
 
-                    application.lives = application.lives - 1
-                    application.livesText.text = "Lives: " .. application.lives
+                    game.lives = game.lives - 1
+                    game.livesText.text = "Lives: " .. game.lives
 
-                    if ( application.lives == 0 ) then
-                        application.stopGame()
+                    if ( game.lives == 0 ) then
+                        game.stopGame()
                     else
-                        application.ship.alpha = 0
-                        timer.pause( application.laserLoopTimer )
-                        timer.performWithDelay( 1000, shipAction.restore( application ) )
+                        game.ship.alpha = 0
+                        timer.pause( game.laserLoopTimer )
+                        timer.performWithDelay( 1000, shipAction.restore( game ) )
                     end
                 end
             end

@@ -2,21 +2,21 @@ local sprite = require( "src.images.sprite" )
 
 local Laser = {}
 
-function Laser.fire( application, physics )
+function Laser.fire( game, physics )
     return function()
-        local newLaser = display.newImageRect( application.mainGroup, sprite.objectSheet, 5, 14, 40 )
+        local newLaser = display.newImageRect( game.mainGroup, sprite.objectSheet, 5, 14, 40 )
         physics.addBody( newLaser, "dynamic", { isSensor=true } )
         newLaser.isBullet = true
         newLaser.myName = "laser"
-        newLaser.x = application.ship.x
-        newLaser.y = application.ship.y
+        newLaser.x = game.ship.x
+        newLaser.y = game.ship.y
         newLaser:toBack()
 
         transition.to(
             newLaser,
             {
                 y=-40,
-                time=application.fireTime,
+                time=game.fireTime,
                 onComplete = function() display.remove( newLaser ) end
             } )
     end
