@@ -67,7 +67,11 @@ function Application.start()
 
     Application.ship:addEventListener( "touch", shipAction.drag )
 
-    timer.performWithDelay( 300, laser.fire( Application.mainGroup, Application.ship, physics ), 0 )
+    Application.laserLoopTimer = timer.performWithDelay(
+        300,
+        laser.fire( Application.mainGroup, Application.ship, physics ),
+        0
+    )
 
     Application.gameLoopTimer = timer.performWithDelay(
         500,

@@ -24,6 +24,8 @@ function Ship.restore( application )
         application.ship.x = display.contentCenterX
         application.ship.y = display.contentHeight - 100
 
+        timer.resume( application.laserLoopTimer )
+
         transition.to(
             application.ship,
             {
