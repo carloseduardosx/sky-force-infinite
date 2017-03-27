@@ -23,19 +23,38 @@ Application.backGroup = display.newGroup();
 Application.mainGroup = display.newGroup();
 Application.uiGroup = display.newGroup();
 
+Application.fireDelay = 300
+Application.fireTime = 500
+
+Application.asteroidGeneratorDelay = 500
+Application.asteroidLeftLinearVelocityX = math.random( 40, 120 )
+Application.asteroidLeftLinearVelocityY = math.random( 20, 60 )
+Application.asteroidTopLinearVelocityX = math.random( -40, 40 )
+Application.asteroidTopLinearVelocityY = math.random( 40, 120 )
+Application.asteroidRightLinearVelocityX = math.random( -120, -40 )
+Application.asteroidRightLinearVelocityY = math.random( 20, 60 )
+
 Application.background = image.background( Application.backGroup )
 
+function Application.startFire()
+    return timer.performWithDelay(
+        Application.fireDelay,
+        laser.fire( Application, physics ),
+        0
+    )
+end
+
+function Application.startAsteroids()
+    return timer.performWithDelay(
+        Application.asteroidGeneratorDelay,
+        asteroid.generator( Application, physics ),
+        0
+    )
+end
+
 function Application.initGame()
-    Application.laserLoopTimer = timer.performWithDelay(
-        300,
-        laser.fire( Application.mainGroup, Application.ship, physics ),
-        0
-    )
-    Application.gameLoopTimer = timer.performWithDelay(
-        500,
-        asteroid.generator(Application.mainGroup, Application.asteroidsTable, physics),
-        0
-    )
+    Application.laserLoopTimer = Application.startFire()
+    Application.gameLoopTimer = Application.startAsteroids()
     Runtime:addEventListener(
         "collision",
         event.onCollision( Application )
@@ -51,6 +70,49 @@ function Application.stopGame()
         "collision",
         event.onCollision( Application )
     )
+end
+
+function Application.removeShadowBackground()
+    transition.to( Application.background, { time=500, alpha=1 } )
+end
+
+function Application.applyShadowBackground()
+    transition.to( Application.background, { time=1000, alpha=0.4 } )
+end
+
+function Application.speedUp()
+    Application.fireTime = 500
+    Application.fireDelay = 300
+    Application.asteroidGeneratorDelay = 500
+    Application.asteroidLeftLinearVelocityX = math.random( 40, 120 )
+    Application.asteroidLeftLinearVelocityX = math.random( 40, 120 )
+    Application.asteroidLeftLinearVelocityY = math.random( 20, 60 )
+    Application.asteroidTopLinearVelocityX = math.random( -40, 40 )
+    Application.asteroidTopLinearVelocityY = math.random( 40, 120 )
+    Application.asteroidRightLinearVelocityX = math.random( -120, -40 )
+    Application.asteroidRightLinearVelocityY = math.random( 20, 60 )
+    timer.cancel( Application.laserLoopTimer )
+    timer.cancel( Application.gameLoopTimer )
+    Application.removeShadowBackground()
+    Application.laserLoopTimer = Application.startFire()
+    Application.gameLoopTimer = Application.startAsteroids()
+end
+
+function Application.slowMotion()
+    Application.fireTime = 5000
+    Application.fireDelay = 1500
+    Application.asteroidGeneratorDelay = 2000
+    Application.asteroidLeftLinearVelocityX = math.random( 10, 40 )
+    Application.asteroidLeftLinearVelocityY = math.random( 10, 20 )
+    Application.asteroidTopLinearVelocityX = math.random( -10, 10 )
+    Application.asteroidTopLinearVelocityY = math.random( 10, 40 )
+    Application.asteroidRightLinearVelocityX = math.random( -40, -10 )
+    Application.asteroidRightLinearVelocityY = math.random( 10, 20 )
+    timer.cancel( Application.laserLoopTimer )
+    timer.cancel( Application.gameLoopTimer )
+    Application.applyShadowBackground()
+    Application.laserLoopTimer = Application.startFire()
+    Application.gameLoopTimer = Application.startAsteroids()
 end
 
 function Application.start()
@@ -76,7 +138,7 @@ function Application.start()
     display.setStatusBar( display.HiddenStatusBar )
 
     Application.ship:addEventListener( "touch", Application.initGame )
-    Application.ship:addEventListener( "touch", shipAction.drag )
+    Application.ship:addEventListener( "touch", shipAction.drag( Application ) )
 
 end
 

@@ -1,21 +1,25 @@
 local Ship = {}
 
-function Ship.drag( event )
-    local ship = event.target
-    local phase = event.phase
+function Ship.drag( application )
+    return function( event )
+        local ship = event.target
+        local phase = event.phase
 
-    if ( "began" == phase ) then
-        display.currentStage:setFocus( ship )
-        ship.touchOffsetX = event.x - ship.x
-        ship.touchOffsetY = event.y - ship.y
-    elseif ( "moved" == phase ) then
-        ship.x = event.x - ship.touchOffsetX
-        ship.y = event.y - ship.touchOffsetY
-    elseif ( "ended" == phase or "cancelled" == phase ) then
-        display.currentStage:setFocus( nil )
+        if ( "began" == phase ) then
+            application.speedUp()
+            display.currentStage:setFocus( ship )
+            ship.touchOffsetX = event.x - ship.x
+            ship.touchOffsetY = event.y - ship.y
+        elseif ( "moved" == phase ) then
+            ship.x = event.x - ship.touchOffsetX
+            ship.y = event.y - ship.touchOffsetY
+        elseif ( "ended" == phase or "cancelled" == phase ) then
+            application.slowMotion()
+            display.currentStage:setFocus( nil )
+        end
+
+        return true -- Consume event completely
     end
-
-    return true -- Consume event completely
 end
 
 function Ship.restore( application )
