@@ -32,9 +32,7 @@ Application.fireDelay = 300
 Application.fireTime = 500
 
 Application.asteroidGeneratorDelay = 500
-Application.largeStarGeneratorDelay = 500
-Application.mediumStarGeneratorDelay = 1000
-Application.minorStarGeneratorDelay = 2000
+Application.starLinearVelocity = 50
 Application.asteroidLeftLinearVelocityX = math.random( 40, 120 )
 Application.asteroidLeftLinearVelocityY = math.random( 20, 60 )
 Application.asteroidTopLinearVelocityX = math.random( -40, 40 )
@@ -64,6 +62,7 @@ function Application.startAsteroids()
 end
 
 function Application.initStarts()
+    star.createStarts( Application, physics, true, 200)
     return timer.performWithDelay(
         Application.asteroidGeneratorDelay,
         star.generator( Application, physics ),
