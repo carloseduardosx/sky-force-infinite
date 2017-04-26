@@ -32,7 +32,9 @@ Application.fireDelay = 300
 Application.fireTime = 500
 
 Application.asteroidGeneratorDelay = 500
-Application.starLinearVelocity = 50
+Application.minorStarLinearVelocity = 50
+Application.mediumStarLinearVelocity = 55
+Application.largeStarLinearVelocity = 60
 Application.asteroidLeftLinearVelocityX = math.random( 40, 120 )
 Application.asteroidLeftLinearVelocityY = math.random( 20, 60 )
 Application.asteroidTopLinearVelocityX = math.random( -40, 40 )
@@ -62,7 +64,7 @@ function Application.startAsteroids()
 end
 
 function Application.initStarts()
-    star.createStarts( Application, physics, true, 200)
+    star.startStarsMovement( Application )
     return timer.performWithDelay(
         Application.asteroidGeneratorDelay,
         star.generator( Application, physics ),
@@ -155,6 +157,8 @@ function Application.start()
     Application.scoreText = display.newText( Application.uiGroup, "Score: " .. Application.score, 400, 80, native.systemFont, 36)
 
     display.setStatusBar( display.HiddenStatusBar )
+
+    star.createStarts( Application, physics, true, 200, false)
 
     Application.ship:addEventListener( "touch", Application.initGame )
     Application.ship:addEventListener( "touch", shipAction.drag( Application ) )

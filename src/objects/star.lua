@@ -2,44 +2,73 @@ local sprite = require( "src.images.sprite" )
 
 local Star = {}
 
-function Star.create( application, physics, startType, yPosition )
+function Star.create( application, physics, startType, yPosition, hasMovement )
 
     local collisionFilter = { maskBits = 2, categoryBits = 4 }
     -- TODO create start sprites and add to screen and tables
     -- and then create logic do create then and remove when necessary
     if ( startType == 1 ) then
         local minorStar = display.newImageRect( application.minorStars, sprite.minorStarSheet, 1, 5, 5 )
-        table.insert( application.starsTable, minorStars)
+        table.insert( application.starsTable, minorStar)
         minorStar.name = "minorStart"
         minorStar.x = math.random( 10, display.contentWidth )
         minorStar.y = yPosition
         physics.addBody( minorStar, "dynamic", { density = 1, bounce = 0, filter = collisionFilter } )
-        minorStar:setLinearVelocity(
-            0,
-            application.starLinearVelocity
-        )
+        if ( hasMovement ) then
+            minorStar:setLinearVelocity(
+                0,
+                application.minorStarLinearVelocity
+            )
+        end
     elseif ( startType == 2 ) then
         local mediumStar = display.newSprite( application.mediumStars, sprite.mediumStarsSheet, sprite.startSequence )
-        table.insert( application.starsTable, mediumStars)
+        table.insert( application.starsTable, mediumStar)
         mediumStar.name = "mediumStart"
         mediumStar.x = math.random( 10, display.contentWidth )
         mediumStar.y = yPosition
         physics.addBody( mediumStar, "dynamic", { density = 1, bounce = 0, filter = collisionFilter } )
-        mediumStar:setLinearVelocity(
-            0,
-            application.starLinearVelocity
-        )
+        if ( hasMovement ) then
+            mediumStar:setLinearVelocity(
+                0,
+                application.mediumStarLinearVelocity
+            )
+        end
     elseif ( startType == 3 ) then
         local largeStar = display.newSprite( application.largeStars, sprite.largeStarsSheet, sprite.startSequence )
-        table.insert( application.starsTable, largeStars)
+        table.insert( application.starsTable, largeStar)
         largeStar.name = "largeStart"
         largeStar.x = math.random( 10, display.contentWidth - 10 )
         largeStar.y = yPosition
         physics.addBody( largeStar, "dynamic", { density = 1, bounce = 0, filter = collisionFilter } )
-        largeStar:setLinearVelocity(
-            0,
-            application.starLinearVelocity
-        )
+        if ( hasMovement ) then
+            largeStar:setLinearVelocity(
+                0,
+                application.largeStarLinearVelocity
+            )
+        end
+    end
+end
+
+function Star.startStarsMovement( application )
+    local name = nil
+    for i = #application.starsTable, 1, -1 do
+        name = application.starsTable[i].name
+        if ( name == "minorStart" ) then
+            application.starsTable[i]:setLinearVelocity(
+                0,
+                application.minorStarLinearVelocity
+            )
+        elseif ( name == "mediumStart" ) then
+            application.starsTable[i]:setLinearVelocity(
+                0,
+                application.mediumStarLinearVelocity
+            )
+        else
+            application.starsTable[i]:setLinearVelocity(
+                0,
+                application.largeStarLinearVelocity
+            )
+        end
     end
 end
 
@@ -49,23 +78,20 @@ function Star.generator ( application, physics )
 
             local currentStarsTable = application.starsTable[i]
 
-            if ( currentStarsTable.x < -100 or
-                    currentStarsTable.x > display.contentWidth + 100 or
-                    currentStarsTable.y < - 100 or
-                    currentStarsTable.y > display.contentHeight + 100 )
+            if ( currentStarsTable.y > display.contentHeight + 10 )
             then
                 display.remove( currentStarsTable )
                 table.remove( application.starsTable, i )
             end
         end
 
-        if ( #application.starsTable <= 50 ) then
-            Star.createStarts( application, physics, false, 10)
+        if ( #application.starsTable <= 190 ) then
+            Star.createStarts( application, physics, false, 10, true)
         end
     end
 end
 
-function Star.createStarts( application, physics, onScreen, quantity)
+function Star.createStarts( application, physics, onScreen, quantity, hasMovement)
 
     local starType = nil
     local startYPosition = nil
@@ -73,13 +99,13 @@ function Star.createStarts( application, physics, onScreen, quantity)
         for i=1, quantity, 1 do
             starType = math.random( 1, 3)
             startYPosition = math.random( 10, display.contentHeight - 10 )
-            Star.create( application, physics, starType, startYPosition)
+            Star.create( application, physics, starType, startYPosition, hasMovement)
         end
     else
         for i=1, quantity, 1 do
             starType = math.random( 1, 3)
             startYPosition = math.random( - (display.contentHeight / 2), 0 )
-            Star.create( application, physics, starType, startYPosition)
+            Star.create( application, physics, starType, startYPosition, hasMovement)
         end
     end
 end
