@@ -2,6 +2,7 @@ local physics = require( "physics" )
 local sprite = require( "src.images.sprite" )
 local image = require( "src.images.image" )
 local asteroid = require( "src.objects.asteroid" )
+local star = require( "src.objects.star" )
 local laser = require( "src.objects.laser" )
 local shipAction = require( "src.objects.ship" )
 local event = require( "src.events.collision" )
@@ -13,6 +14,7 @@ Application.score = 0
 Application.died = false
 
 Application.asteroidsTable = {}
+Application.starsTable = {}
 
 Application.ship = nil
 Application.gameLoopTimer = nil
@@ -20,6 +22,9 @@ Application.livesText = nil
 Application.scoreText = nil
 
 Application.backGroup = display.newGroup();
+Application.minorStars = display.newGroup();
+Application.mediumStars = display.newGroup();
+Application.largeStars = display.newGroup();
 Application.mainGroup = display.newGroup();
 Application.uiGroup = display.newGroup();
 
@@ -27,12 +32,18 @@ Application.fireDelay = 300
 Application.fireTime = 500
 
 Application.asteroidGeneratorDelay = 500
+Application.largeStarGeneratorDelay = 500
+Application.mediumStarGeneratorDelay = 1000
+Application.minorStarGeneratorDelay = 2000
 Application.asteroidLeftLinearVelocityX = math.random( 40, 120 )
 Application.asteroidLeftLinearVelocityY = math.random( 20, 60 )
 Application.asteroidTopLinearVelocityX = math.random( -40, 40 )
 Application.asteroidTopLinearVelocityY = math.random( 40, 120 )
 Application.asteroidRightLinearVelocityX = math.random( -120, -40 )
 Application.asteroidRightLinearVelocityY = math.random( 20, 60 )
+Application.minorStarLinearVelocity = math.random(10, 20)
+Application.mediumStarLinearVelocity = math.random(30, 40)
+Application.largeStarLinearVelocity = math.random(50, 60)
 
 Application.background = image.background( Application.backGroup )
 
@@ -52,9 +63,18 @@ function Application.startAsteroids()
     )
 end
 
+function Application.initStarts()
+    return timer.performWithDelay(
+        Application.asteroidGeneratorDelay,
+        star.generator( Application, physics ),
+        0
+    )
+end
+
 function Application.initGame()
     Application.laserLoopTimer = Application.startFire()
     Application.gameLoopTimer = Application.startAsteroids()
+    Application.starLoopTimer = Application.initStarts()
     Runtime:addEventListener(
         "collision",
         event.onCollision( Application )
