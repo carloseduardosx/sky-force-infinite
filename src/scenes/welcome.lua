@@ -54,8 +54,8 @@ end
 function scene:destroy( event )
     local sceneGroup = self.view
     sceneGroup:remove( Welcome.mediumStars )
-    scenegroup:remove( welcome.minorstars )
-    scenegroup:remove( welcome.largestars )
+    scenegroup:remove( Welcome.minorStars )
+    scenegroup:remove( Welcome.largeStars )
 end
 
 scene:addEventListener( "create", scene )

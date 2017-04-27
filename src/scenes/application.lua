@@ -84,6 +84,7 @@ end
 function Application.stopGame()
     timer.cancel( Application.laserLoopTimer )
     timer.cancel( Application.gameLoopTimer )
+    timer.cancel( Application.starLoopTimer )
     display.remove( Application.ship )
     Runtime:removeEventListener(
         "collision",

@@ -1,4 +1,5 @@
 local shipAction = require( "src.objects.ship" )
+local composer = require( "composer" )
 local Event = {}
 
 function Event.onCollision( application )
@@ -33,7 +34,7 @@ function Event.onCollision( application )
                     application.livesText.text = "Lives: " .. application.lives
 
                     if ( application.lives == 0 ) then
-                        application.stopGame()
+                        composer.gotoScene( "src.scenes.welcome" )
                     else
                         application.ship.alpha = 0
                         timer.pause( application.laserLoopTimer )

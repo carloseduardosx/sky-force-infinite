@@ -30,7 +30,6 @@ function scene:show( event )
         application.background = image.background( application.backGroup )
         application.start()
     elseif ( phase == "did" ) then
-        -- Nothing todo here yet
     end
 end
 
@@ -40,21 +39,20 @@ function scene:hide( event )
    local phase = event.phase
 
    if ( phase == "will" ) then
-       Application.stopGame()
+       application.stopGame()
    elseif ( phase == "did" ) then
-       -- Nothing todo here yet
    end
 end
 
 function scene:destroy( event )
 
    local sceneGroup = self.view
-    sceneGroup:remove(application.backGroup)
-    sceneGroup:remove(application.minorStars)
-    sceneGroup:remove(application.mediumStars)
-    sceneGroup:remove(application.largeStars)
-    sceneGroup:remove(application.mainGroup)
-    sceneGroup:remove(application.uiGroup)
+    sceneGroup:remo(application.backGroup)
+    sceneGroup:remo(application.minorStars)
+    sceneGroup:remo(application.mediumStars)
+    sceneGroup:remo(application.largeStars)
+    sceneGroup:remo(application.mainGroup)
+    sceneGroup:remo(application.uiGroup)
 end
 
 scene:addEventListener( "create", scene )
