@@ -45,8 +45,6 @@ Application.minorStarLinearVelocity = math.random(10, 20)
 Application.mediumStarLinearVelocity = math.random(30, 40)
 Application.largeStarLinearVelocity = math.random(50, 60)
 
-Application.background = image.background( Application.backGroup )
-
 function Application.startFire()
     return timer.performWithDelay(
         Application.fireDelay,

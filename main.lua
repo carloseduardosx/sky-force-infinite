@@ -1,3 +1,3 @@
-local application = require( "src.application" )
+local composer = require( "composer" )
 
-application.start()
+composer.gotoScene( "src.scenes.game" )
