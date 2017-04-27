@@ -49,7 +49,12 @@ end
 function scene:destroy( event )
 
    local sceneGroup = self.view
-   -- Nothing todo here yet
+    sceneGroup:remove(application.backGroup)
+    sceneGroup:remove(application.minorStars)
+    sceneGroup:remove(application.mediumStars)
+    sceneGroup:remove(application.largeStars)
+    sceneGroup:remove(application.mainGroup)
+    sceneGroup:remove(application.uiGroup)
 end
 
 scene:addEventListener( "create", scene )
