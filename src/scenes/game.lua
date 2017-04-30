@@ -11,7 +11,6 @@ local event = require( "src.events.collision" )
 local scene = composer.newScene()
 
 function scene:create( event )
-
     local sceneGroup = self.view
     sceneGroup:insert(application.backGroup)
     sceneGroup:insert(application.minorStars)
@@ -19,40 +18,38 @@ function scene:create( event )
     sceneGroup:insert(application.largeStars)
     sceneGroup:insert(application.mainGroup)
     sceneGroup:insert(application.uiGroup)
+    application.background = image.background( application.backGroup )
 end
 
 function scene:show( event )
-
     local sceneGroup = self.view
     local phase = event.phase
 
     if ( phase == "will" ) then
-        application.background = image.background( application.backGroup )
         application.start()
-    elseif ( phase == "did" ) then
     end
 end
 
 function scene:hide( event )
 
-   local sceneGroup = self.view
-   local phase = event.phase
+    local sceneGroup = self.view
+    local phase = event.phase
 
-   if ( phase == "will" ) then
-       application.stopGame()
-   elseif ( phase == "did" ) then
-   end
+    if ( phase == "will" ) then
+        application.stopGame()
+        application.endGame()
+    end
 end
 
 function scene:destroy( event )
 
-   local sceneGroup = self.view
-    sceneGroup:remo(application.backGroup)
-    sceneGroup:remo(application.minorStars)
-    sceneGroup:remo(application.mediumStars)
-    sceneGroup:remo(application.largeStars)
-    sceneGroup:remo(application.mainGroup)
-    sceneGroup:remo(application.uiGroup)
+    local sceneGroup = self.view
+    sceneGroup:remove(application.backGroup)
+    sceneGroup:remove(application.minorStars)
+    sceneGroup:remove(application.mediumStars)
+    sceneGroup:remove(application.largeStars)
+    sceneGroup:remove(application.mainGroup)
+    sceneGroup:remove(application.uiGroup)
 end
 
 scene:addEventListener( "create", scene )

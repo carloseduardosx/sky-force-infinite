@@ -5,8 +5,6 @@ local Star = {}
 function Star.create( application, physics, startType, yPosition, hasMovement )
 
     local collisionFilter = { maskBits = 2, categoryBits = 4 }
-    -- TODO create start sprites and add to screen and tables
-    -- and then create logic do create then and remove when necessary
     if ( startType == 1 ) then
         local minorStar = display.newImageRect( application.minorStars, sprite.minorStarSheet, 1, 5, 5 )
         table.insert( application.starsTable, minorStar)
@@ -49,6 +47,13 @@ function Star.create( application, physics, startType, yPosition, hasMovement )
     end
 end
 
+function Star.remove( application )
+    for i = #application.starsTable, 1, -1 do
+        application.starsTable[i]:removeSelf()
+        application.starsTable[i] = nil
+    end
+end
+
 function Star.startStarsMovement( application )
     local name = nil
     for i = #application.starsTable, 1, -1 do
@@ -68,6 +73,20 @@ function Star.startStarsMovement( application )
                 0,
                 application.largeStarLinearVelocity
             )
+        end
+    end
+end
+
+function Star.stopStarsMovement( application )
+    local name = nil
+    for i = #application.starsTable, 1, -1 do
+        name = application.starsTable[i].name
+        if ( name == "minorStart" ) then
+            application.starsTable[i]:setLinearVelocity( 0, 0 )
+        elseif ( name == "mediumStart" ) then
+            application.starsTable[i]:setLinearVelocity( 0, 0 )
+        else
+            application.starsTable[i]:setLinearVelocity( 0, 0 )
         end
     end
 end

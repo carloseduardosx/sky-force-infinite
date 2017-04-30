@@ -9,8 +9,6 @@ local event = require( "src.events.collision" )
 
 local Application = {}
 
-Application.lives = 3
-Application.score = 0
 Application.died = false
 
 Application.asteroidsTable = {}
@@ -54,6 +52,7 @@ function Application.startFire()
 end
 
 function Application.startAsteroids()
+    asteroid.startAsteroidsMovement( Application )
     return timer.performWithDelay(
         Application.asteroidGeneratorDelay,
         asteroid.generator( Application, physics ),
@@ -82,14 +81,25 @@ function Application.initGame()
 end
 
 function Application.stopGame()
+    star.stopStarsMovement( Application )
+    asteroid.stopAsteroidsMovement( Application )
+    timer.cancel( Application.starLoopTimer )
     timer.cancel( Application.laserLoopTimer )
     timer.cancel( Application.gameLoopTimer )
-    timer.cancel( Application.starLoopTimer )
-    display.remove( Application.ship )
+    Application.ship:removeEventListener( "touch", Application.initGame )
+    Application.ship:removeEventListener( "touch", shipAction.drag( Application ) )
     Runtime:removeEventListener(
         "collision",
         event.onCollision( Application )
     )
+end
+
+function Application.endGame()
+    star.remove( Application )
+    asteroid.remove( Application )
+    display.remove( Application.ship )
+    display.remove( Application.livesText )
+    display.remove( Application.scoreText )
 end
 
 function Application.removeShadowBackground()
@@ -140,6 +150,9 @@ function Application.start()
 
     physics.start();
     physics.setGravity( 0, 0 )
+
+    Application.lives = 3
+    Application.score = 0
 
     Application.background.x = display.contentCenterX
     Application.background.y = display.contentCenterY
