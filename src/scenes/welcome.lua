@@ -5,6 +5,7 @@ local image = require( "src.images.image" )
 local Welcome = {}
 local scene = composer.newScene()
 local startText = nil
+local recordsText = nil
 
 Welcome.minorStars = display.newGroup()
 Welcome.mediumStars = display.newGroup()
@@ -13,6 +14,10 @@ Welcome.starsTable = {}
 
 function goToApplication()
     composer.gotoScene( "src.scenes.game" )
+end
+
+function goToRecords()
+    composer.gotoScene( "src.scenes.records" )
 end
 
 function scene:create( event )
@@ -27,7 +32,8 @@ function scene:create( event )
     sceneGroup:insert( Welcome.mediumStars )
     sceneGroup:insert( Welcome.largeStars )
     star.createStarts( Welcome, physics, true, 200, false)
-    startText = display.newText( sceneGroup, "Start Game", display.contentCenterX, display.contentCenterY, native.systemFont, 36)
+    startText = display.newText( sceneGroup, "Start Game", display.contentCenterX, display.contentCenterY - 50, native.systemFont, 36)
+    recordsText = display.newText( sceneGroup, "Records", display.contentCenterX, display.contentCenterY + 50, native.systemFont, 36)
 end
 
 function scene:show( event )
@@ -36,6 +42,7 @@ function scene:show( event )
 
     if ( phase == "did" ) then
         startText:addEventListener( "tap", goToApplication )
+        recordsText:addEventListener( "tap", goToRecords )
     end
 end
 
@@ -46,6 +53,7 @@ function scene:hide( event )
 
     if ( phase == "did" ) then
         startText:removeEventListener( "tap", goToApplication )
+        recordsText:removeEventListener( "tap", goToRecords )
     end
 end
 

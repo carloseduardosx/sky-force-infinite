@@ -1,5 +1,6 @@
 local shipAction = require( "src.objects.ship" )
 local composer = require( "composer" )
+local record = require( "src.model.record" )
 local Event = {}
 
 function Event.onCollision( application )
@@ -34,6 +35,8 @@ function Event.onCollision( application )
                     application.livesText.text = "Lives: " .. application.lives
 
                     if ( application.lives == 0 ) then
+                        record.insert( application.score )
+                        record.save()
                         composer.gotoScene( "src.scenes.welcome" )
                     else
                         application.ship.alpha = 0
