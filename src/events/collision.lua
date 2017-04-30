@@ -38,6 +38,7 @@ function Event.onCollision( application )
                         record.insert( application.score )
                         record.save()
                         composer.gotoScene( "src.scenes.welcome" )
+                        application.died = false
                     else
                         application.ship.alpha = 0
                         timer.pause( application.laserLoopTimer )

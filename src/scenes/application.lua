@@ -52,7 +52,6 @@ function Application.startFire()
 end
 
 function Application.startAsteroids()
-    asteroid.startAsteroidsMovement( Application )
     return timer.performWithDelay(
         Application.asteroidGeneratorDelay,
         asteroid.generator( Application, physics ),
@@ -70,13 +69,11 @@ function Application.initStarts()
 end
 
 function Application.initGame()
+    print( "Application.initGame" )
     Application.laserLoopTimer = Application.startFire()
     Application.gameLoopTimer = Application.startAsteroids()
     Application.starLoopTimer = Application.initStarts()
-    Runtime:addEventListener(
-        "collision",
-        event.onCollision( Application )
-    )
+    Runtime:addEventListener( "collision", event.onCollision( Application ) )
     Application.ship:removeEventListener( "touch", Application.initGame )
 end
 
@@ -88,9 +85,7 @@ function Application.stopGame()
     timer.cancel( Application.gameLoopTimer )
     Application.ship:removeEventListener( "touch", Application.initGame )
     Application.ship:removeEventListener( "touch", shipAction.drag( Application ) )
-    Runtime:removeEventListener(
-        "collision",
-        event.onCollision( Application )
+    Runtime:removeEventListener( "collision", event.onCollision( Application )
     )
 end
 
@@ -174,7 +169,6 @@ function Application.start()
 
     Application.ship:addEventListener( "touch", Application.initGame )
     Application.ship:addEventListener( "touch", shipAction.drag( Application ) )
-
 end
 
 return Application
