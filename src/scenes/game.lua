@@ -3,7 +3,6 @@ local physics = require( "physics" )
 local application = require( "src.scenes.application" )
 local sprite = require( "src.images.sprite" )
 local image = require( "src.images.image" )
-local asteroid = require( "src.objects.asteroid" )
 local star = require( "src.objects.star" )
 local laser = require( "src.objects.laser" )
 local shipAction = require( "src.objects.ship" )
@@ -36,7 +35,6 @@ function scene:hide( event )
     local phase = event.phase
 
     if ( phase == "will" ) then
-        application.stopGame()
         application.endGame()
     end
 end

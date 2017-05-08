@@ -1,3 +1,5 @@
+local easyEnemiesInfo = require( "src.images.easyEnemies" )
+
 local Sprite = {}
 
 Sprite.sheetOptions = {
@@ -91,6 +93,7 @@ Sprite.startSequence = {
 }
 
 Sprite.objectSheet = graphics.newImageSheet( "assets/gameObjects.png", Sprite.sheetOptions )
+Sprite.easyEnemiesSheet = graphics.newImageSheet( "assets/enemies/easy/easyEnemies.png", easyEnemiesInfo:getSheet() )
 Sprite.minorStarSheet = graphics.newImageSheet( "assets/star_minor_size.png", Sprite.minorStartOptions )
 Sprite.mediumStarsSheet = graphics.newImageSheet( "assets/star_medium_size.png", Sprite.mediumStartOptions )
 Sprite.largeStarsSheet = graphics.newImageSheet( "assets/star_large_size.png", Sprite.largeStartOptions )

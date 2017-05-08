@@ -1,7 +1,7 @@
 local physics = require( "physics" )
 local sprite = require( "src.images.sprite" )
 local image = require( "src.images.image" )
-local asteroid = require( "src.objects.asteroid" )
+local enemies = require( "src.objects.enemies" )
 local star = require( "src.objects.star" )
 local laser = require( "src.objects.laser" )
 local shipAction = require( "src.objects.ship" )
@@ -11,7 +11,8 @@ local Application = {}
 
 Application.died = false
 
-Application.asteroidsTable = {}
+Application.enemiesTable = {}
+Application.lasersTable = {}
 Application.starsTable = {}
 
 Application.ship = nil
@@ -26,19 +27,16 @@ Application.largeStars = display.newGroup();
 Application.mainGroup = display.newGroup();
 Application.uiGroup = display.newGroup();
 
-Application.fireDelay = 300
-Application.fireTime = 500
-
-Application.asteroidGeneratorDelay = 500
+Application.fireDelay = 700
+Application.easyEnemiesGeneratorDelay = 1000
+Application.starsGeneratorDelay = 500
 Application.minorStarLinearVelocity = 50
 Application.mediumStarLinearVelocity = 55
 Application.largeStarLinearVelocity = 60
-Application.asteroidLeftLinearVelocityX = math.random( 40, 120 )
-Application.asteroidLeftLinearVelocityY = math.random( 20, 60 )
-Application.asteroidTopLinearVelocityX = math.random( -40, 40 )
-Application.asteroidTopLinearVelocityY = math.random( 40, 120 )
-Application.asteroidRightLinearVelocityX = math.random( -120, -40 )
-Application.asteroidRightLinearVelocityY = math.random( 20, 60 )
+Application.laserLinearVelocityY = -400
+Application.laserSlowMotionLinearVelocityY = -100
+Application.easyEnemieLinearVelocityY = 400
+Application.easyEnemieSlowLinearVelocityY = 100
 Application.minorStarLinearVelocity = math.random(10, 20)
 Application.mediumStarLinearVelocity = math.random(30, 40)
 Application.largeStarLinearVelocity = math.random(50, 60)
@@ -46,23 +44,23 @@ Application.largeStarLinearVelocity = math.random(50, 60)
 function Application.startFire()
     return timer.performWithDelay(
         Application.fireDelay,
-        laser.fire( Application, physics ),
+        laser.generator( Application, physics ),
         0
     )
 end
 
-function Application.startAsteroids()
+function Application.startEasyEnemies()
     return timer.performWithDelay(
-        Application.asteroidGeneratorDelay,
-        asteroid.generator( Application, physics ),
+        Application.easyEnemiesGeneratorDelay,
+        enemies.generator( Application, physics ),
         0
     )
 end
 
-function Application.initStarts()
+function Application.initStars()
     star.startStarsMovement( Application )
     return timer.performWithDelay(
-        Application.asteroidGeneratorDelay,
+        Application.starsGeneratorDelay,
         star.generator( Application, physics ),
         0
     )
@@ -71,27 +69,25 @@ end
 function Application.initGame()
     print( "Application.initGame" )
     Application.laserLoopTimer = Application.startFire()
-    Application.gameLoopTimer = Application.startAsteroids()
-    Application.starLoopTimer = Application.initStarts()
+    Application.gameLoopTimer = Application.startEasyEnemies()
+    Application.starLoopTimer = Application.initStars()
     Runtime:addEventListener( "collision", event.onCollision( Application ) )
     Application.ship:removeEventListener( "touch", Application.initGame )
 end
 
-function Application.stopGame()
+function Application.endGame()
     star.stopStarsMovement( Application )
-    asteroid.stopAsteroidsMovement( Application )
+
     timer.cancel( Application.starLoopTimer )
     timer.cancel( Application.laserLoopTimer )
     timer.cancel( Application.gameLoopTimer )
+
     Application.ship:removeEventListener( "touch", Application.initGame )
     Application.ship:removeEventListener( "touch", shipAction.drag( Application ) )
-    Runtime:removeEventListener( "collision", event.onCollision( Application )
-    )
-end
+    Runtime:removeEventListener( "collision", event.onCollision( Application ) )
 
-function Application.endGame()
     star.remove( Application )
-    asteroid.remove( Application )
+    enemies.remove( Application )
     display.remove( Application.ship )
     display.remove( Application.livesText )
     display.remove( Application.scoreText )
@@ -106,38 +102,33 @@ function Application.applyShadowBackground()
 end
 
 function Application.speedUp()
-    Application.fireTime = 500
-    Application.fireDelay = 300
-    Application.asteroidGeneratorDelay = 500
-    Application.asteroidLeftLinearVelocityX = math.random( 40, 120 )
-    Application.asteroidLeftLinearVelocityX = math.random( 40, 120 )
-    Application.asteroidLeftLinearVelocityY = math.random( 20, 60 )
-    Application.asteroidTopLinearVelocityX = math.random( -40, 40 )
-    Application.asteroidTopLinearVelocityY = math.random( 40, 120 )
-    Application.asteroidRightLinearVelocityX = math.random( -120, -40 )
-    Application.asteroidRightLinearVelocityY = math.random( 20, 60 )
+    Application.fireDelay = 500
+    Application.starsGeneratorDelay = 500
+    Application.easyEnemiesGeneratorDelay = 1000
+    timer.cancel( Application.starLoopTimer )
     timer.cancel( Application.laserLoopTimer )
     timer.cancel( Application.gameLoopTimer )
     Application.removeShadowBackground()
+    enemies.speedUp( Application )
+    laser.speedUp( Application )
+    Application.laserLoopTimer = Application.initStars()
     Application.laserLoopTimer = Application.startFire()
-    Application.gameLoopTimer = Application.startAsteroids()
+    Application.gameLoopTimer = Application.startEasyEnemies()
 end
 
 function Application.slowMotion()
-    Application.fireTime = 5000
     Application.fireDelay = 1500
-    Application.asteroidGeneratorDelay = 2000
-    Application.asteroidLeftLinearVelocityX = math.random( 10, 40 )
-    Application.asteroidLeftLinearVelocityY = math.random( 10, 20 )
-    Application.asteroidTopLinearVelocityX = math.random( -10, 10 )
-    Application.asteroidTopLinearVelocityY = math.random( 10, 40 )
-    Application.asteroidRightLinearVelocityX = math.random( -40, -10 )
-    Application.asteroidRightLinearVelocityY = math.random( 10, 20 )
+    Application.starsGeneratorDelay = 2000
+    Application.easyEnemiesGeneratorDelay = 3000
+    timer.cancel( Application.starLoopTimer )
     timer.cancel( Application.laserLoopTimer )
     timer.cancel( Application.gameLoopTimer )
     Application.applyShadowBackground()
+    enemies.slowMotion( Application )
+    laser.slowMotion( Application )
+    Application.laserLoopTimer = Application.initStars()
     Application.laserLoopTimer = Application.startFire()
-    Application.gameLoopTimer = Application.startAsteroids()
+    Application.gameLoopTimer = Application.startEasyEnemies()
 end
 
 function Application.start()
@@ -152,11 +143,11 @@ function Application.start()
     Application.background.x = display.contentCenterX
     Application.background.y = display.contentCenterY
 
-    Application.ship = display.newImageRect( Application.mainGroup, sprite.objectSheet, 4, 98, 79 )
+    Application.ship = image.ship( Application.mainGroup )
     Application.ship.x = display.contentCenterX
     Application.ship.y = display.contentHeight - 100
 
-    physics.addBody( Application.ship, { radius=30, isSensor=true } )
+    physics.addBody( Application.ship, { radius=60, isSensor=true } )
 
     Application.ship.myName = "ship"
 

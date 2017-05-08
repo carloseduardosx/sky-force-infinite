@@ -10,23 +10,29 @@ function Event.onCollision( application )
             local obj1 = event.object1
             local obj2 = event.object2
 
-            if ( ( obj1.myName == "laser" and obj2.myName == "asteroid" ) or
-                    ( obj1.myName == "asteroid" and obj2.myName == "laser") )
+            if ( ( obj1.myName == "laser" and obj2.myName == "easyEnemie" ) or
+                    ( obj1.myName == "easyEnemie" and obj2.myName == "laser") )
             then
                 display.remove( obj1 )
                 display.remove( obj2 )
 
-                for i = #application.asteroidsTable, 1, -1 do
-                    if ( application.asteroidsTable[i] == obj1 or application.asteroidsTable[i] == obj2 ) then
-                        table.remove( application.asteroidsTable, i )
+                for i = #application.enemiesTable, 1, -1 do
+                    if ( application.enemiesTable[i] == obj1 or application.enemiesTable[i] == obj2 ) then
+                        table.remove( application.enemiesTable, i )
+                        break
+                    end
+                end
+                for i = #application.lasersTable, 1, -1 do
+                    if ( application.lasersTable[i] == obj1 or application.lasersTable[i] == obj2 ) then
+                        table.remove( application.lasersTable, i )
                         break
                     end
                 end
 
                 application.score = application.score + 100
                 application.scoreText.text = "Score: " .. application.score
-            elseif ( ( obj1.myName == "ship" and obj2.myName == "asteroid" ) or
-                    ( obj1.myName == "asteroid" and obj2.myName == "ship" ) )
+            elseif ( ( obj1.myName == "ship" and obj2.myName == "easyEnemie" ) or
+                    ( obj1.myName == "easyEnemie" and obj2.myName == "ship" ) )
             then
                 if ( application.died == false ) then
                     application.died = true
