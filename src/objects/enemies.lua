@@ -20,18 +20,20 @@ function Enemies.create( application, physics )
     end
     easyEnemie.y = -100
     easyEnemie.whereFrom = whereFrom
-    easyEnemie:setLinearVelocity( 0, application.easyEnemieLinearVelocityY )
+    easyEnemie:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY )
 end
 
 function Enemies.slowMotion( application )
+    application.easyEnemiesLinearVelocityY = application.easyEnemiesSlowLinearVelocityY
     for i = #application.enemiesTable, 1, -1 do
-        application.enemiesTable[i]:setLinearVelocity( 0, application.easyEnemieSlowLinearVelocityY )
+        application.enemiesTable[i]:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY )
     end
 end
 
 function Enemies.speedUp( application )
+    application.easyEnemiesLinearVelocityY = application.easyEnemiesFastLinearVelocityY
     for i = #application.enemiesTable, 1, -1 do
-        application.enemiesTable[i]:setLinearVelocity( 0, application.easyEnemieLinearVelocityY )
+        application.enemiesTable[i]:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY )
     end
 end
 
