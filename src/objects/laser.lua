@@ -16,12 +16,14 @@ function Laser.fire( application, physics )
 end
 
 function Laser.slowMotion( application )
+    application.laserLinearVelocityY = application.laserSlowMotionLinearVelocityY
     for i = #application.lasersTable, 1, -1 do
-        application.lasersTable[i]:setLinearVelocity( 0, application.laserSlowMotionLinearVelocityY )
+        application.lasersTable[i]:setLinearVelocity( 0, application.laserLinearVelocityY )
     end
 end
 
 function Laser.speedUp( application )
+    application.laserLinearVelocityY = application.laserFastLinearVelocityY
     for i = #application.lasersTable, 1, -1 do
         application.lasersTable[i]:setLinearVelocity( 0, application.laserLinearVelocityY )
     end
