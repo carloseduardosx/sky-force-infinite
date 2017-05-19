@@ -22,7 +22,7 @@ function Records.loadRecords( sceneGroup )
         for i = #records, 1, -1 do
             table.insert (
                 Records.records,
-                display.newText( sceneGroup, "" .. records[i], display.contentCenterX, 100 + (70 * count), native.systemFont, 36)
+                display.newText( sceneGroup, "" .. count .. "˚- " .. records[i], display.contentCenterX, 100 + (70 * count), native.systemFont, 36)
             )
             count = count + 1
         end
