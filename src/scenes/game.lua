@@ -39,6 +39,10 @@ function scene:hide( event )
     end
 end
 
+function scene:resumeGame()
+    application.slowMotion()
+end
+
 function scene:destroy( event )
 
     local sceneGroup = self.view

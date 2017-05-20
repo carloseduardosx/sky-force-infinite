@@ -78,16 +78,8 @@ function Star.startStarsMovement( application )
 end
 
 function Star.stopStarsMovement( application )
-    local name = nil
     for i = #application.starsTable, 1, -1 do
-        name = application.starsTable[i].name
-        if ( name == "minorStart" ) then
-            application.starsTable[i]:setLinearVelocity( 0, 0 )
-        elseif ( name == "mediumStart" ) then
-            application.starsTable[i]:setLinearVelocity( 0, 0 )
-        else
-            application.starsTable[i]:setLinearVelocity( 0, 0 )
-        end
+        application.starsTable[i]:setLinearVelocity( 0, 0 )
     end
 end
 

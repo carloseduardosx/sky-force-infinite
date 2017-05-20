@@ -1,10 +1,10 @@
+local composer = require( "composer" )
 local physics = require( "physics" )
 local sprite = require( "src.images.sprite" )
 local image = require( "src.images.image" )
 local enemies = require( "src.objects.enemies" )
 local star = require( "src.objects.star" )
 local laser = require( "src.objects.laser" )
-local pause = require( "src.objects.pause" )
 local shipAction = require( "src.objects.ship" )
 local event = require( "src.events.collision" )
 
@@ -73,6 +73,7 @@ function Application.initGame()
     Application.starLoopTimer = Application.initStars()
     Runtime:addEventListener( "collision", event.onCollision( Application ) )
     Application.ship:removeEventListener( "touch", Application.initGame )
+    Application.pause:addEventListener( "tap", Application.pauseGame )
 end
 
 function Application.endGame()
@@ -89,6 +90,7 @@ function Application.endGame()
     star.remove( Application )
     enemies.remove( Application )
     display.remove( Application.ship )
+    display.remove( Application.pause )
     display.remove( Application.livesText )
     display.remove( Application.scoreText )
 end
@@ -111,9 +113,24 @@ function Application.speedUp()
     Application.removeShadowBackground()
     enemies.speedUp( Application )
     laser.speedUp( Application )
-    Application.laserLoopTimer = Application.initStars()
+    Application.starLoopTimer = Application.initStars()
     Application.laserLoopTimer = Application.startFire()
     Application.gameLoopTimer = Application.startEasyEnemies()
+end
+
+function Application.pauseGame()
+    local options = {
+        isModal = true,
+        effect = "fade",
+        time = 400,
+    }
+    composer.showOverlay( "src.scenes.pause", options )
+    star.stopStarsMovement( Application )
+    timer.cancel( Application.starLoopTimer )
+    timer.cancel( Application.laserLoopTimer )
+    timer.cancel( Application.gameLoopTimer )
+    enemies.slowMotion( Application, true)
+    laser.slowMotion( Application, true )
 end
 
 function Application.slowMotion()
@@ -126,7 +143,7 @@ function Application.slowMotion()
     Application.applyShadowBackground()
     enemies.slowMotion( Application )
     laser.slowMotion( Application )
-    Application.laserLoopTimer = Application.initStars()
+    Application.starLoopTimer = Application.initStars()
     Application.laserLoopTimer = Application.startFire()
     Application.gameLoopTimer = Application.startEasyEnemies()
 end
@@ -147,7 +164,9 @@ function Application.start()
     Application.ship.x = display.contentCenterX
     Application.ship.y = display.contentHeight - 100
 
-    pause.create( Application )
+    Application.pause = image.pause( Application.uiGroup )
+    Application.pause.x = display.contentWidth - 150
+    Application.pause.y = 80
 
     physics.addBody( Application.ship, { radius=60, isSensor=true } )
 

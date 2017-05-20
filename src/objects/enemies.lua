@@ -23,8 +23,12 @@ function Enemies.create( application, physics )
     easyEnemie:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY )
 end
 
-function Enemies.slowMotion( application )
-    application.easyEnemiesLinearVelocityY = application.easyEnemiesSlowLinearVelocityY
+function Enemies.slowMotion( application, isPause )
+    if ( isPause == true ) then
+        application.easyEnemiesLinearVelocityY = 0
+    else
+        application.easyEnemiesLinearVelocityY = application.easyEnemiesSlowLinearVelocityY
+    end
     for i = #application.enemiesTable, 1, -1 do
         application.enemiesTable[i]:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY )
     end
