@@ -4,6 +4,7 @@ local image = require( "src.images.image" )
 local enemies = require( "src.objects.enemies" )
 local star = require( "src.objects.star" )
 local laser = require( "src.objects.laser" )
+local pause = require( "src.objects.pause" )
 local shipAction = require( "src.objects.ship" )
 local event = require( "src.events.collision" )
 
@@ -30,18 +31,15 @@ Application.uiGroup = display.newGroup();
 Application.fireDelay = 700
 Application.easyEnemiesGeneratorDelay = 1000
 Application.starsGeneratorDelay = 500
-Application.minorStarLinearVelocity = 50
-Application.mediumStarLinearVelocity = 55
-Application.largeStarLinearVelocity = 60
-Application.laserFastLinearVelocityY = -400
+Application.minorStarLinearVelocity = 100
+Application.mediumStarLinearVelocity = 150
+Application.largeStarLinearVelocity = 200
+Application.laserFastLinearVelocityY = -800
 Application.laserSlowMotionLinearVelocityY = -100
 Application.laserLinearVelocityY = laserFastLinearVelocityY
 Application.easyEnemiesFastLinearVelocityY = 400
 Application.easyEnemiesSlowLinearVelocityY = 100
 Application.easyEnemiesLinearVelocityY = easyEnemiesFastLinearVelocityY
-Application.minorStarLinearVelocity = math.random(10, 20)
-Application.mediumStarLinearVelocity = math.random(30, 40)
-Application.largeStarLinearVelocity = math.random(50, 60)
 
 function Application.startFire()
     return timer.performWithDelay(
@@ -148,6 +146,8 @@ function Application.start()
     Application.ship = image.ship( Application.mainGroup )
     Application.ship.x = display.contentCenterX
     Application.ship.y = display.contentHeight - 100
+
+    pause.create( Application )
 
     physics.addBody( Application.ship, { radius=60, isSensor=true } )
 

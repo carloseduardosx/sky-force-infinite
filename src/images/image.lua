@@ -8,4 +8,8 @@ function Image.ship ( group )
     return display.newImageRect( group, "assets/main_ship.png", 124, 135 )
 end
 
+function Image.pause( group )
+    return display.newImageRect( group, "assets/pause_icon.png", 64, 64 )
+end
+
 return Image
