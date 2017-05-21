@@ -3,6 +3,7 @@ local record = require( "src.model.record" )
 local logger = require( "src.util.logger" )
 local star = require( "src.objects.star" )
 local image = require( "src.images.image" )
+local sounds = require( "src.objects.sounds" )
 
 local Records = {}
 local scene = composer.newScene()
@@ -14,6 +15,7 @@ Records.mediumStars = display.newGroup()
 Records.largeStars = display.newGroup()
 Records.starsTable = {}
 Records.records = {}
+Records.backgroundSound = nil
 
 function Records.loadRecords( sceneGroup )
     local records = record.load()
@@ -68,6 +70,10 @@ function scene:show( event )
 
     if (phase == "will") then
         Records.loadRecords( sceneGroup )
+        audio.reserveChannels( 1 )
+        audio.setVolume( 1.0, { channel=1 } )
+        Records.backgroundSound = sounds.startBackground()
+        audio.play( Records.backgroundSound, { channel=1 } )
     elseif ( phase == "did" ) then
         backText:addEventListener( "tap", backToApplication )
     end
@@ -78,7 +84,12 @@ function scene:hide( event )
     local sceneGroup = self.view
     local phase = event.phase
 
-    if ( phase == "did" ) then
+    if ( phase == "will" ) then
+        audio.stop()
+        audio.dispose( Records.backgroundSound )
+        Records.backgroundSound = nil
+        audio.reserveChannels( 0 )
+    elseif ( phase == "did" ) then
         Records.removeTexts()
         backText:removeEventListener( "tap", backToApplication )
     end

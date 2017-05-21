@@ -8,6 +8,10 @@ function Sounds.enemyExplosion()
     return audio.loadSound( "assets/sounds/enemy_explosion.mp3" )
 end
 
+function Sounds.startBackground()
+    return audio.loadStream( "assets/sounds/start_background.mp3" )
+end
+
 function Sounds.gameBackground()
     return audio.loadStream( "assets/sounds/game_brackground.mp3" )
 end

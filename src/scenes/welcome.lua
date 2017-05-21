@@ -1,6 +1,7 @@
 local composer = require( "composer" )
 local star = require( "src.objects.star" )
 local image = require( "src.images.image" )
+local sounds = require( "src.objects.sounds" )
 
 local Welcome = {}
 local scene = composer.newScene()
@@ -11,6 +12,7 @@ Welcome.minorStars = display.newGroup()
 Welcome.mediumStars = display.newGroup()
 Welcome.largeStars = display.newGroup()
 Welcome.starsTable = {}
+Welcome.backgroundSound = nil
 
 function goToApplication()
     composer.gotoScene( "src.scenes.game" )
@@ -40,7 +42,12 @@ function scene:show( event )
     local sceneGroup = self.view
     local phase = event.phase
 
-    if ( phase == "did" ) then
+    if ( phase == "will" ) then
+        audio.reserveChannels( 1 )
+        audio.setVolume( 1.0, { channel=1 } )
+        Welcome.backgroundSound = sounds.startBackground()
+        audio.play( Welcome.backgroundSound, { channel=1 } )
+    elseif ( phase == "did" ) then
         startText:addEventListener( "tap", goToApplication )
         recordsText:addEventListener( "tap", goToRecords )
     end
@@ -51,7 +58,12 @@ function scene:hide( event )
     local sceneGroup = self.view
     local phase = event.phase
 
-    if ( phase == "did" ) then
+    if ( phase == "will") then
+        audio.stop()
+        audio.dispose( Welcome.backgroundSound )
+        Welcome.backgroundSound = nil
+        audio.reserveChannels( 0 )
+    elseif ( phase == "did" ) then
         startText:removeEventListener( "tap", goToApplication )
         recordsText:removeEventListener( "tap", goToRecords )
     end

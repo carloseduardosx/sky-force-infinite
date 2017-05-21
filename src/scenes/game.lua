@@ -20,15 +20,6 @@ function scene:create( event )
     sceneGroup:insert(application.mainGroup)
     sceneGroup:insert(application.uiGroup)
     application.background = image.background( application.backGroup )
-    audio.reserveChannels( 5 )
-    audio.setVolume( 1.0, { channel=1 })
-    audio.setVolume( 0.1, { channel=2 })
-    audio.setVolume( 0.1, { channel=3 })
-    audio.setVolume( 0.1, { channel=4 })
-    audio.setVolume( 0.1, { channel=5 })
-    application.soundTable.gameBackground = sounds.gameBackground()
-    application.soundTable.shotSound = sounds.shot()
-    application.soundTable.enemyExplosion = sounds.enemyExplosion()
 end
 
 function scene:show( event )
@@ -37,6 +28,15 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         application.start()
+        audio.reserveChannels( 5 )
+        audio.setVolume( 1.0, { channel=1 })
+        audio.setVolume( 0.1, { channel=2 })
+        audio.setVolume( 0.1, { channel=3 })
+        audio.setVolume( 0.1, { channel=4 })
+        audio.setVolume( 0.1, { channel=5 })
+        application.soundTable.gameBackground = sounds.gameBackground()
+        application.soundTable.shotSound = sounds.shot()
+        application.soundTable.enemyExplosion = sounds.enemyExplosion()
     end
 end
 
@@ -47,6 +47,12 @@ function scene:hide( event )
 
     if ( phase == "will" ) then
         application.endGame()
+        for k,v in pairs( application.soundTable ) do
+            audio.stop()
+            audio.dispose( v )
+            application.soundTable[k] = nil
+        end
+        audio.reserveChannels( 0 )
     end
 end
 
@@ -63,12 +69,6 @@ function scene:destroy( event )
     sceneGroup:remove(application.largeStars)
     sceneGroup:remove(application.mainGroup)
     sceneGroup:remove(application.uiGroup)
-    for k,v in pairs( application.soundTable ) do
-        audio.stop()
-        audio.dispose( v )
-        application.soundTable[k] = nil
-    end
-    audio.reserveChannels( 0 )
 end
 
 scene:addEventListener( "create", scene )
