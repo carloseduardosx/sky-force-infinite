@@ -9,6 +9,7 @@ local Records = {}
 local scene = composer.newScene()
 local backText = nil
 local noRecordsText = nil
+local titleText = nil
 
 Records.minorStars = display.newGroup()
 Records.mediumStars = display.newGroup()
@@ -16,6 +17,19 @@ Records.largeStars = display.newGroup()
 Records.starsTable = {}
 Records.records = {}
 Records.backgroundSound = nil
+Records.starsGeneratorDelay = 500
+Records.minorStarLinearVelocity = 100
+Records.mediumStarLinearVelocity = 150
+Records.largeStarLinearVelocity = 200
+
+function Records.initStars()
+    star.startStarsMovement( Records )
+    return timer.performWithDelay(
+        Records.starsGeneratorDelay,
+        star.generator( Records, physics ),
+        0
+    )
+end
 
 function Records.loadRecords( sceneGroup )
     local records = record.load()
@@ -24,15 +38,17 @@ function Records.loadRecords( sceneGroup )
         for i = #records, 1, -1 do
             table.insert (
                 Records.records,
-                display.newText( sceneGroup, "" .. count .. "˚- " .. records[i], display.contentCenterX, 100 + (70 * count), native.systemFont, 36)
+                display.newText( sceneGroup, "" .. count .. "˚- " .. records[i], display.contentCenterX, 120 + (70 * count), native.systemFont, 36 )
             )
             count = count + 1
         end
-        backText = display.newText( sceneGroup, "Back", display.contentCenterX, 100 + (70 * count), native.systemFont, 36)
+        backText = display.newText( sceneGroup, "<< Back", display.contentCenterX, 120 + (70 * count), "Arvo-Regular.ttf", 45 )
     else
-        noRecordsText = display.newText( sceneGroup, "No records found!", display.contentCenterX, display.contentCenterY - 50, native.systemFont, 36)
-        backText = display.newText( sceneGroup, "Back", display.contentCenterX, display.contentCenterY + 50, native.systemFont, 36)
+        noRecordsText = display.newText( sceneGroup, "No records found!", display.contentCenterX, display.contentCenterY - 50, "Arvo-Regular.ttf", 45 )
+        backText = display.newText( sceneGroup, "<< Back", display.contentCenterX, display.contentCenterY + 50, "Arvo-Regular.ttf", 45 )
     end
+    titleText = display.newText( sceneGroup, "RECORDS", display.contentCenterX, 100, "starwars.ttf", 60 )
+    titleText:setFillColor( 1, 1, 1, 1.0 )
 end
 
 function Records.removeTexts()
@@ -62,6 +78,7 @@ function scene:create( event )
     sceneGroup:insert( Records.mediumStars )
     sceneGroup:insert( Records.largeStars )
     star.createStarts( Records, physics, true, 200, false)
+    transition.to( background, { time=0, alpha=0.4 } )
 end
 
 function scene:show( event )
@@ -74,6 +91,7 @@ function scene:show( event )
         audio.setVolume( 1.0, { channel=1 } )
         Records.backgroundSound = sounds.startBackground()
         audio.play( Records.backgroundSound, { channel=1 } )
+        Records.starLoopTimer = Records.initStars()
     elseif ( phase == "did" ) then
         backText:addEventListener( "tap", backToApplication )
     end
@@ -89,6 +107,8 @@ function scene:hide( event )
         audio.dispose( Records.backgroundSound )
         Records.backgroundSound = nil
         audio.reserveChannels( 0 )
+        star.stopStarsMovement( Records )
+        timer.cancel( Records.starLoopTimer )
     elseif ( phase == "did" ) then
         Records.removeTexts()
         backText:removeEventListener( "tap", backToApplication )

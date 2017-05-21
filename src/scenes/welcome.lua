@@ -19,8 +19,6 @@ Welcome.minorStarLinearVelocity = 100
 Welcome.mediumStarLinearVelocity = 150
 Welcome.largeStarLinearVelocity = 200
 
-Welcome.starsTable = {}
-
 function goToApplication()
     composer.gotoScene( "src.scenes.game" )
 end
@@ -29,7 +27,7 @@ function goToRecords()
     composer.gotoScene( "src.scenes.records" )
 end
 
-function initStars()
+function Welcome.initStars()
     star.startStarsMovement( Welcome )
     return timer.performWithDelay(
         Welcome.starsGeneratorDelay,
@@ -62,12 +60,11 @@ function scene:show( event )
     local phase = event.phase
 
     if ( phase == "will" ) then
+        Welcome.starLoopTimer = Welcome.initStars()
         audio.reserveChannels( 1 )
         audio.setVolume( 1.0, { channel=1 } )
         Welcome.backgroundSound = sounds.startBackground()
         audio.play( Welcome.backgroundSound, { channel=1 } )
-        Welcome.starLoopTimer = initStars()
-        star.startStarsMovement( Welcome )
     elseif ( phase == "did" ) then
         startText:addEventListener( "tap", goToApplication )
         recordsText:addEventListener( "tap", goToRecords )
@@ -79,7 +76,7 @@ function scene:hide( event )
     local sceneGroup = self.view
     local phase = event.phase
 
-    if ( phase == "will") then
+    if ( phase == "will" ) then
         audio.stop()
         audio.dispose( Welcome.backgroundSound )
         Welcome.backgroundSound = nil
