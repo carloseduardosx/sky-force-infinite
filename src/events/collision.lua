@@ -1,9 +1,14 @@
 local shipAction = require( "src.objects.ship" )
 local composer = require( "composer" )
 local record = require( "src.model.record" )
+local particleDesigner = require( "src.util.particleDesigner" )
 local Event = {}
 
-function playExplosion( application )
+function playExplosion( application, obj )
+    local explosionEmitter = particleDesigner.newEmitter( "assets/emitters/explosion.pex", "assets/emitters/texture.png" )
+    explosionEmitter.x = obj.x
+    explosionEmitter.y = obj.y
+    timer.performWithDelay( 500, function() explosionEmitter:stop() end )
     if ( not audio.isChannelPlaying( 3 ) ) then
         audio.play( application.soundTable.enemyExplosion, { channel=3 } )
     elseif ( not audio.isChannelPlaying( 4 ) ) then
@@ -23,7 +28,11 @@ function Event.onCollision( application )
             if ( ( obj1.myName == "laser" and obj2.myName == "easyEnemie" ) or
                     ( obj1.myName == "easyEnemie" and obj2.myName == "laser") )
             then
-                playExplosion( application )
+                if ( obj1.myName == "easyEnemie" ) then
+                    playExplosion( application, obj1 )
+                else
+                    playExplosion( application, obj2 )
+                end
                 display.remove( obj1 )
                 display.remove( obj2 )
 
@@ -48,6 +57,12 @@ function Event.onCollision( application )
                 if ( application.died == false ) then
                     application.died = true
 
+                    if ( obj1.myName == "ship" ) then
+                        playExplosion( application, obj1 )
+                    else
+                        playExplosion( application, obj2 )
+                    end
+
                     application.lives = application.lives - 1
                     application.livesText.text = "Lives: " .. application.lives
 
@@ -57,6 +72,14 @@ function Event.onCollision( application )
                         composer.gotoScene( "src.scenes.welcome" )
                         application.died = false
                     else
+                        for i = #application.enemiesTable, 1, -1 do
+                            if ( application.enemiesTable[i] == obj1 or application.enemiesTable[i] == obj2 ) then
+                                playExplosion( application, application.enemiesTable[i] )
+                                display.remove( application.enemiesTable[i] )
+                                table.remove( application.enemiesTable, i )
+                                break
+                            end
+                        end
                         application.ship.alpha = 0
                         timer.pause( application.laserLoopTimer )
                         timer.performWithDelay( 1000, shipAction.restore( application ) )
