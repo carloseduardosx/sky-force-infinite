@@ -35,7 +35,6 @@ function Event.onCollision( application )
                 end
                 display.remove( obj1 )
                 display.remove( obj2 )
-
                 for i = #application.enemiesTable, 1, -1 do
                     if ( application.enemiesTable[i] == obj1 or application.enemiesTable[i] == obj2 ) then
                         table.remove( application.enemiesTable, i )
@@ -67,6 +66,8 @@ function Event.onCollision( application )
                     application.livesText.text = "Lives: " .. application.lives
 
                     if ( application.lives == 0 ) then
+                        application.firstTurbineEmitter:stop()
+                        application.secondTurbineEmitter:stop()
                         record.insert( application.score )
                         record.save()
                         composer.gotoScene( "src.scenes.welcome" )
@@ -80,6 +81,8 @@ function Event.onCollision( application )
                                 break
                             end
                         end
+                        application.firstTurbineEmitter:stop()
+                        application.secondTurbineEmitter:stop()
                         application.ship.alpha = 0
                         timer.pause( application.laserLoopTimer )
                         timer.performWithDelay( 1000, shipAction.restore( application ) )

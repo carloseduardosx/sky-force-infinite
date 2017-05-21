@@ -71,11 +71,11 @@ function Application.initStars()
     )
 end
 
-function Application.initGame()
-    Application.playBackgroundSoundLoop()
+function Application.initGame() Application.playBackgroundSoundLoop()
     Application.laserLoopTimer = Application.startFire()
     Application.gameLoopTimer = Application.startEasyEnemies()
     Application.starLoopTimer = Application.initStars()
+    shipAction.turnOnTurbines( Application )
     Runtime:addEventListener( "collision", event.onCollision( Application ) )
     Application.ship:removeEventListener( "touch", Application.initGame )
     Application.pause:addEventListener( "tap", Application.pauseGame )

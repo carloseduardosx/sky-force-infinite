@@ -1,3 +1,4 @@
+local particleDesigner = require( "src.util.particleDesigner" )
 local Ship = {}
 
 function Ship.drag( application )
@@ -13,6 +14,10 @@ function Ship.drag( application )
         elseif ( "moved" == phase ) then
             ship.x = event.x - ship.touchOffsetX
             ship.y = event.y - ship.touchOffsetY
+            application.firstTurbineEmitter.x = ship.x - 55
+            application.firstTurbineEmitter.y = ship.y + 50
+            application.secondTurbineEmitter.x = ship.x + 55
+            application.secondTurbineEmitter.y = ship.y + 50
         elseif ( "ended" == phase or "cancelled" == phase ) then
             application.slowMotion()
             display.currentStage:setFocus( nil )
@@ -22,11 +27,26 @@ function Ship.drag( application )
     end
 end
 
+function Ship.turnOnTurbines( application )
+    application.firstTurbineEmitter = particleDesigner.newEmitter( "assets/emitters/turbine.pex", "assets/emitters/texture.png" )
+    application.secondTurbineEmitter = particleDesigner.newEmitter( "assets/emitters/turbine.pex", "assets/emitters/texture.png" )
+    application.firstTurbineEmitter.x = application.ship.x - 55
+    application.firstTurbineEmitter.y = application.ship.y + 50
+    application.secondTurbineEmitter.x = application.ship.x + 55
+    application.secondTurbineEmitter.y = application.ship.y + 50
+end
+
 function Ship.restore( application )
     return function()
         application.ship.isBodyActive = false
         application.ship.x = display.contentCenterX
         application.ship.y = display.contentHeight - 100
+        application.firstTurbineEmitter.x = application.ship.x - 55
+        application.firstTurbineEmitter.y = application.ship.y + 50
+        application.secondTurbineEmitter.x = application.ship.x + 55
+        application.secondTurbineEmitter.y = application.ship.y + 50
+        application.firstTurbineEmitter:start()
+        application.secondTurbineEmitter:start()
 
         timer.resume( application.laserLoopTimer )
 
