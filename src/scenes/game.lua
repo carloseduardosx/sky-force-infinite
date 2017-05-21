@@ -10,6 +10,7 @@ local event = require( "src.events.collision" )
 local sounds = require( "src.objects.sounds" )
 local scene = composer.newScene()
 
+
 function scene:create( event )
     local sceneGroup = self.view
     sceneGroup:insert(application.backGroup)
@@ -19,9 +20,15 @@ function scene:create( event )
     sceneGroup:insert(application.mainGroup)
     sceneGroup:insert(application.uiGroup)
     application.background = image.background( application.backGroup )
-    audio.reserveChannels( 2 )
-    audio.setVolume( 0.5, { channel=2 })
-    application.soundTable.shotSound = audio.loadSound( sounds["shot"] )
+    audio.reserveChannels( 5 )
+    audio.setVolume( 1.0, { channel=1 })
+    audio.setVolume( 0.1, { channel=2 })
+    audio.setVolume( 0.1, { channel=3 })
+    audio.setVolume( 0.1, { channel=4 })
+    audio.setVolume( 0.1, { channel=5 })
+    application.soundTable.gameBackground = sounds.gameBackground()
+    application.soundTable.shotSound = sounds.shot()
+    application.soundTable.enemyExplosion = sounds.enemyExplosion()
 end
 
 function scene:show( event )

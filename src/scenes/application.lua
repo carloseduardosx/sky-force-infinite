@@ -50,6 +50,10 @@ function Application.startFire()
     )
 end
 
+function Application.playBackgroundSoundLoop( event )
+    audio.play( Application.soundTable.gameBackground, { channel=1, onComplete=Application.playBackgroundSoundLoop } )
+end
+
 function Application.startEasyEnemies()
     return timer.performWithDelay(
         Application.easyEnemiesGeneratorDelay,
@@ -68,7 +72,7 @@ function Application.initStars()
 end
 
 function Application.initGame()
-    print( "Application.initGame" )
+    Application.playBackgroundSoundLoop()
     Application.laserLoopTimer = Application.startFire()
     Application.gameLoopTimer = Application.startEasyEnemies()
     Application.starLoopTimer = Application.initStars()

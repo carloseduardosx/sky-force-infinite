@@ -3,6 +3,16 @@ local composer = require( "composer" )
 local record = require( "src.model.record" )
 local Event = {}
 
+function playExplosion( application )
+    if ( not audio.isChannelPlaying( 3 ) ) then
+        audio.play( application.soundTable.enemyExplosion, { channel=3 } )
+    elseif ( not audio.isChannelPlaying( 4 ) ) then
+        audio.play( application.soundTable.enemyExplosion, { channel=4 } )
+    elseif ( not audio.isChannelPlaying( 5 ) ) then
+        audio.play( application.soundTable.enemyExplosion, { channel=5 } )
+    end
+end
+
 function Event.onCollision( application )
     return function( event )
         if ( event.phase == "began" ) then
@@ -13,6 +23,7 @@ function Event.onCollision( application )
             if ( ( obj1.myName == "laser" and obj2.myName == "easyEnemie" ) or
                     ( obj1.myName == "easyEnemie" and obj2.myName == "laser") )
             then
+                playExplosion( application )
                 display.remove( obj1 )
                 display.remove( obj2 )
 
