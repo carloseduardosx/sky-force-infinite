@@ -71,7 +71,8 @@ function Application.initStars()
     )
 end
 
-function Application.initGame() Application.playBackgroundSoundLoop()
+function Application.initGame()
+    Application.playBackgroundSoundLoop()
     Application.laserLoopTimer = Application.startFire()
     Application.gameLoopTimer = Application.startEasyEnemies()
     Application.starLoopTimer = Application.initStars()

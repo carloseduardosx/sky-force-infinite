@@ -19,6 +19,10 @@ Welcome.minorStarLinearVelocity = 100
 Welcome.mediumStarLinearVelocity = 150
 Welcome.largeStarLinearVelocity = 200
 
+function Welcome.playBackgroundSoundLoop( event )
+    audio.play( Welcome.backgroundSound, { channel=1, onComplete=Welcome.playBackgroundSoundLoop } )
+end
+
 function goToApplication()
     composer.gotoScene( "src.scenes.game" )
 end
@@ -48,6 +52,7 @@ function scene:create( event )
     sceneGroup:insert( Welcome.mediumStars )
     sceneGroup:insert( Welcome.largeStars )
     star.createStarts( Welcome, physics, true, 200, false)
+    Welcome.backgroundSound = sounds.startBackground()
     titleText = display.newText( sceneGroup, "SKY FORCE\n\n\t INFINITE", display.contentCenterX, 250, "starwars.ttf", 60 )
     startText = display.newText( sceneGroup, "Start Game", display.contentCenterX, display.contentCenterY, "Arvo-Regular.ttf", 45)
     recordsText = display.newText( sceneGroup, "Records", display.contentCenterX, display.contentCenterY + 100, "Arvo-Regular.ttf", 45)
@@ -63,8 +68,7 @@ function scene:show( event )
         Welcome.starLoopTimer = Welcome.initStars()
         audio.reserveChannels( 1 )
         audio.setVolume( 1.0, { channel=1 } )
-        Welcome.backgroundSound = sounds.startBackground()
-        audio.play( Welcome.backgroundSound, { channel=1 } )
+        Welcome.playBackgroundSoundLoop()
     elseif ( phase == "did" ) then
         startText:addEventListener( "tap", goToApplication )
         recordsText:addEventListener( "tap", goToRecords )
