@@ -15,6 +15,7 @@ Application.died = false
 Application.enemiesTable = {}
 Application.lasersTable = {}
 Application.starsTable = {}
+Application.soundTable = {}
 
 Application.ship = nil
 Application.gameLoopTimer = nil

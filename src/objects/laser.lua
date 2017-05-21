@@ -3,6 +3,7 @@ local sprite = require( "src.images.sprite" )
 local Laser = {}
 
 function Laser.fire( application, physics )
+    audio.play( application.soundTable.shotSound, { channel=2 } )
     local newLaser = display.newImageRect( application.mainGroup, sprite.objectSheet, 5, 14, 40 )
     table.insert( application.lasersTable, newLaser )
     physics.addBody( newLaser, "dynamic", { isSensor=true } )

@@ -7,6 +7,7 @@ local star = require( "src.objects.star" )
 local laser = require( "src.objects.laser" )
 local shipAction = require( "src.objects.ship" )
 local event = require( "src.events.collision" )
+local sounds = require( "src.objects.sounds" )
 local scene = composer.newScene()
 
 function scene:create( event )
@@ -18,6 +19,9 @@ function scene:create( event )
     sceneGroup:insert(application.mainGroup)
     sceneGroup:insert(application.uiGroup)
     application.background = image.background( application.backGroup )
+    audio.reserveChannels( 2 )
+    audio.setVolume( 0.5, { channel=2 })
+    application.soundTable.shotSound = audio.loadSound( sounds["shot"] )
 end
 
 function scene:show( event )
@@ -52,6 +56,12 @@ function scene:destroy( event )
     sceneGroup:remove(application.largeStars)
     sceneGroup:remove(application.mainGroup)
     sceneGroup:remove(application.uiGroup)
+    for k,v in pairs( application.soundTable ) do
+        audio.stop()
+        audio.dispose( v )
+        application.soundTable[k] = nil
+    end
+    audio.reserveChannels( 0 )
 end
 
 scene:addEventListener( "create", scene )
