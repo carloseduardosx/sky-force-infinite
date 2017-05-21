@@ -13,7 +13,7 @@ function Ship.drag( application )
             ship.touchOffsetY = event.y - ship.y
         elseif ( "moved" == phase ) then
             ship.x = event.x - ship.touchOffsetX
-            ship.y = event.y - ship.touchOffsetY
+            ship.y = event.y - ship.touchOffsetY - 100
             application.firstTurbineEmitter.x = ship.x - 55
             application.firstTurbineEmitter.y = ship.y + 50
             application.secondTurbineEmitter.x = ship.x + 55
