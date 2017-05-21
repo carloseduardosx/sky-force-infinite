@@ -7,12 +7,19 @@ local Welcome = {}
 local scene = composer.newScene()
 local startText = nil
 local recordsText = nil
+local titleText = nil
 
 Welcome.minorStars = display.newGroup()
 Welcome.mediumStars = display.newGroup()
 Welcome.largeStars = display.newGroup()
 Welcome.starsTable = {}
 Welcome.backgroundSound = nil
+Welcome.starsGeneratorDelay = 500
+Welcome.minorStarLinearVelocity = 100
+Welcome.mediumStarLinearVelocity = 150
+Welcome.largeStarLinearVelocity = 200
+
+Welcome.starsTable = {}
 
 function goToApplication()
     composer.gotoScene( "src.scenes.game" )
@@ -20,6 +27,15 @@ end
 
 function goToRecords()
     composer.gotoScene( "src.scenes.records" )
+end
+
+function initStars()
+    star.startStarsMovement( Welcome )
+    return timer.performWithDelay(
+        Welcome.starsGeneratorDelay,
+        star.generator( Welcome, physics ),
+        0
+    )
 end
 
 function scene:create( event )
@@ -34,8 +50,11 @@ function scene:create( event )
     sceneGroup:insert( Welcome.mediumStars )
     sceneGroup:insert( Welcome.largeStars )
     star.createStarts( Welcome, physics, true, 200, false)
-    startText = display.newText( sceneGroup, "Start Game", display.contentCenterX, display.contentCenterY - 50, native.systemFont, 36)
-    recordsText = display.newText( sceneGroup, "Records", display.contentCenterX, display.contentCenterY + 50, native.systemFont, 36)
+    titleText = display.newText( sceneGroup, "SKY FORCE\n\n\t INFINITE", display.contentCenterX, 250, "starwars.ttf", 60 )
+    startText = display.newText( sceneGroup, "Start Game", display.contentCenterX, display.contentCenterY, "Arvo-Regular.ttf", 45)
+    recordsText = display.newText( sceneGroup, "Records", display.contentCenterX, display.contentCenterY + 100, "Arvo-Regular.ttf", 45)
+    titleText:setFillColor( 1, 1, 1, 1.0 )
+    transition.to( background, { time=0, alpha=0.4 } )
 end
 
 function scene:show( event )
@@ -47,6 +66,8 @@ function scene:show( event )
         audio.setVolume( 1.0, { channel=1 } )
         Welcome.backgroundSound = sounds.startBackground()
         audio.play( Welcome.backgroundSound, { channel=1 } )
+        Welcome.starLoopTimer = initStars()
+        star.startStarsMovement( Welcome )
     elseif ( phase == "did" ) then
         startText:addEventListener( "tap", goToApplication )
         recordsText:addEventListener( "tap", goToRecords )
@@ -63,6 +84,8 @@ function scene:hide( event )
         audio.dispose( Welcome.backgroundSound )
         Welcome.backgroundSound = nil
         audio.reserveChannels( 0 )
+        star.stopStarsMovement( Welcome )
+        timer.cancel( Welcome.starLoopTimer )
     elseif ( phase == "did" ) then
         startText:removeEventListener( "tap", goToApplication )
         recordsText:removeEventListener( "tap", goToRecords )
