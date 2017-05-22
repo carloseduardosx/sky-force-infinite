@@ -65,9 +65,9 @@ function Event.onCollision( application )
                     application.lives = application.lives - 1
                     application.livesText.text = "Lives: " .. application.lives
 
-                    if ( application.lives == 0 ) then
-                        application.firstTurbineEmitter:stop()
-                        application.secondTurbineEmitter:stop()
+                    application.firstTurbineEmitter:stop()
+                    application.secondTurbineEmitter:stop()
+                    if ( application.lives <= 0 ) then
                         record.insert( application.score )
                         record.save()
                         composer.gotoScene( "src.scenes.welcome" )
@@ -81,8 +81,6 @@ function Event.onCollision( application )
                                 break
                             end
                         end
-                        application.firstTurbineEmitter:stop()
-                        application.secondTurbineEmitter:stop()
                         application.ship.alpha = 0
                         timer.pause( application.laserLoopTimer )
                         timer.performWithDelay( 1000, shipAction.restore( application ) )
