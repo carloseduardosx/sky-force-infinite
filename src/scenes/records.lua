@@ -82,7 +82,6 @@ function scene:create( event )
     sceneGroup:insert( Records.mediumStars )
     sceneGroup:insert( Records.largeStars )
     star.createStarts( Records, physics, true, 200, false)
-    Records.backgroundSound = sounds.startBackground()
     transition.to( background, { time=0, alpha=0.4 } )
 end
 
@@ -94,6 +93,7 @@ function scene:show( event )
         Records.loadRecords( sceneGroup )
         audio.reserveChannels( 1 )
         audio.setVolume( 1.0, { channel=1 } )
+        Records.backgroundSound = sounds.startBackground()
         Records.playBackgroundSoundLoop()
         Records.starLoopTimer = Records.initStars()
     elseif ( phase == "did" ) then
