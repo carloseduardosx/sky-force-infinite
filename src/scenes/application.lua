@@ -30,7 +30,7 @@ Application.mainGroup = display.newGroup();
 Application.uiGroup = display.newGroup();
 
 Application.fireDelay = 700
-Application.easyEnemiesGeneratorDelay = 1000
+Application.easyEnemiesGeneratorDelay = 500
 Application.starsGeneratorDelay = 500
 Application.minorStarLinearVelocity = 100
 Application.mediumStarLinearVelocity = 150

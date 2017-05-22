@@ -20,7 +20,11 @@ function Enemies.create( application, physics )
     end
     easyEnemie.y = -100
     easyEnemie.whereFrom = whereFrom
-    easyEnemie:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY )
+    if ( application.score < 1000) then
+        easyEnemie:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY )
+    else
+        easyEnemie:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY + ((application.score / 1000) * 50) )
+    end
 end
 
 function Enemies.slowMotion( application, isPause )
@@ -37,7 +41,11 @@ end
 function Enemies.speedUp( application )
     application.easyEnemiesLinearVelocityY = application.easyEnemiesFastLinearVelocityY
     for i = #application.enemiesTable, 1, -1 do
-        application.enemiesTable[i]:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY )
+        if ( application.score < 1000) then
+            application.enemiesTable[i]:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY )
+        else
+            application.enemiesTable[i]:setLinearVelocity( 0, application.easyEnemiesLinearVelocityY + ((application.score / 1000) * 30) )
+        end
     end
 end
 
