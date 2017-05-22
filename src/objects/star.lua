@@ -20,6 +20,7 @@ function Star.create( application, physics, startType, yPosition, hasMovement )
         end
     elseif ( startType == 2 ) then
         local mediumStar = display.newSprite( application.mediumStars, sprite.mediumStarsSheet, sprite.startSequence )
+        mediumStar:play()
         table.insert( application.starsTable, mediumStar)
         mediumStar.name = "mediumStart"
         mediumStar.x = math.random( 10, display.contentWidth )
@@ -33,6 +34,7 @@ function Star.create( application, physics, startType, yPosition, hasMovement )
         end
     elseif ( startType == 3 ) then
         local largeStar = display.newSprite( application.largeStars, sprite.largeStarsSheet, sprite.startSequence )
+        largeStar:play()
         table.insert( application.starsTable, largeStar)
         largeStar.name = "largeStart"
         largeStar.x = math.random( 10, display.contentWidth - 10 )

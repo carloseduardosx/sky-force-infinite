@@ -42,7 +42,7 @@ function Records.loadRecords( sceneGroup )
         for i = #records, 1, -1 do
             table.insert (
                 Records.records,
-                display.newText( sceneGroup, "" .. count .. "˚- " .. records[i], display.contentCenterX, 120 + (70 * count), native.systemFont, 36 )
+                display.newText( sceneGroup, "" .. count .. "˚- " .. records[i], display.contentCenterX, 120 + (70 * count), "Arvo-Regular.ttf", 36 )
             )
             count = count + 1
         end

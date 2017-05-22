@@ -92,10 +92,63 @@ Sprite.startSequence = {
     }
 }
 
+Sprite.auraSequence = {
+    {
+        name = "shipFocus",
+        start = 1,
+        count = 6,
+        time = 800,
+        loopCount = 0,
+        loopDirection = "forward"
+    }
+}
+
+Sprite.auraOptions = {
+    frames = {
+        {
+            x = 0,
+            y = 0,
+            width = 165,
+            height = 165
+        },
+        {
+            x = 165,
+            y = 0,
+            width = 165,
+            height = 165
+        },
+        {
+            x = 0,
+            y = 165,
+            width = 165,
+            height = 165
+        },
+        {
+            x = 165,
+            y = 165,
+            width = 165,
+            height = 165
+        },
+        {
+            x = 0,
+            y = 330,
+            width = 165,
+            height = 165
+        },
+        {
+            x = 165,
+            y = 330,
+            width = 165,
+            height = 165
+        }
+    }
+}
+
 Sprite.objectSheet = graphics.newImageSheet( "assets/gameObjects.png", Sprite.sheetOptions )
 Sprite.easyEnemiesSheet = graphics.newImageSheet( "assets/enemies/easy/easyEnemies.png", easyEnemiesInfo:getSheet() )
 Sprite.minorStarSheet = graphics.newImageSheet( "assets/star_minor_size.png", Sprite.minorStartOptions )
 Sprite.mediumStarsSheet = graphics.newImageSheet( "assets/star_medium_size.png", Sprite.mediumStartOptions )
 Sprite.largeStarsSheet = graphics.newImageSheet( "assets/star_large_size.png", Sprite.largeStartOptions )
+Sprite.auraSheet = graphics.newImageSheet( "assets/aura.png", Sprite.auraOptions )
 
 return Sprite

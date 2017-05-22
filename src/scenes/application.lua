@@ -80,6 +80,7 @@ function Application.initGame()
     Runtime:addEventListener( "collision", event.onCollision( Application ) )
     Application.ship:removeEventListener( "touch", Application.initGame )
     Application.pause:addEventListener( "tap", Application.pauseGame )
+    display.remove( Application.aura )
 end
 
 function Application.endGame()
@@ -174,12 +175,17 @@ function Application.start()
     Application.pause.x = display.contentWidth - 150
     Application.pause.y = 80
 
+    Application.aura = display.newSprite( Application.mainGroup, sprite.auraSheet, sprite.auraSequence )
+    Application.aura.x = display.contentCenterX
+    Application.aura.y = display.contentHeight - 100
+    Application.aura:play()
+
     physics.addBody( Application.ship, { radius=60, isSensor=true } )
 
     Application.ship.myName = "ship"
 
-    Application.livesText = display.newText( Application.uiGroup, "Lives: " .. Application.lives, 200, 80, native.systemFont, 36)
-    Application.scoreText = display.newText( Application.uiGroup, "Score: " .. Application.score, 400, 80, native.systemFont, 36)
+    Application.livesText = display.newText( Application.uiGroup, "Lives: " .. Application.lives, 200, 80, "Arvo-Regular.ttf", 36 )
+    Application.scoreText = display.newText( Application.uiGroup, "Score: " .. Application.score, 400, 80, "Arvo-Regular.ttf", 36 )
 
     display.setStatusBar( display.HiddenStatusBar )
 

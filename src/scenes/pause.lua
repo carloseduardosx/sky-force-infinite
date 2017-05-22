@@ -12,7 +12,7 @@ function scene:show( event )
     local phase = event.phase
 
     if (phase == "will") then
-        resumeText = display.newText( sceneGroup, "Resume Game", display.contentCenterX, display.contentCenterY, native.systemFont, 36)
+        resumeText = display.newText( sceneGroup, "Resume Game", display.contentCenterX, display.contentCenterY, "Arvo-Regular.ttf", 45 )
     elseif ( phase == "did" ) then
         resumeText:addEventListener( "tap", resumeGame )
     end
